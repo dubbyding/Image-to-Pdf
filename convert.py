@@ -20,16 +20,19 @@ for entry in os.scandir(dir_path+'/Images'):
     if entry.is_dir():
         continue
     ext = entry.name.split('.')[-1]
-    if ext == 'py':
+    if ext == 'py' or ext == 'md':
         continue
+    print(entry.name)
     if initial == 0:
         im1 = Image.open(dir_path+'/Images/'+entry.name, mode='r').convert('RGB')
         initial = initial + 1
     else:
         image_list.append(Image.open(dir_path+'/Images/'+entry.name, mode='r').convert('RGB'))
     os.remove(dir_path+'/Images/'+entry.name)
-
-if image_list == []:
-    im1.save(dir_path+'/pdf/'+name+'.pdf', mode='r')
-else:
-    im1.save(dir_path+'/pdf/'+name+'.pdf', mode='r',save_all = True, append_images = image_list)
+try:
+    if image_list == []:
+        im1.save(dir_path+'/pdf/'+name+'.pdf', mode='r')
+    else:
+        im1.save(dir_path+'/pdf/'+name+'.pdf', mode='r',save_all = True, append_images = image_list)
+except:
+    pass
