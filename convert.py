@@ -22,7 +22,6 @@ for entry in os.scandir(dir_path+'/Images'):
     ext = entry.name.split('.')[-1]
     if ext == 'py' or ext == 'md':
         continue
-    print(entry.name)
     if initial == 0:
         im1 = Image.open(dir_path+'/Images/'+entry.name, mode='r').convert('RGB')
         initial = initial + 1
