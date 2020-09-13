@@ -1,5 +1,10 @@
 import os
-from PIL import Image
+import sys
+import subprocess
+try:
+    from PIL import Image
+except:
+    subprocess.check_call([sys.executable, "-m", "pip", "install", 'pillow'])
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 
@@ -9,12 +14,11 @@ image_list = []
 # Checking if pdf folder exists and checks to name the file
 if not os.path.isdir(dir_path+'/pdf'):
     os.makedirs(dir_path+'/pdf')
+name = list(os.listdir(dir_path+'/pdf'))
+if name == []:
+    name = '1'
 else:
-    name = list(os.listdir(dir_path+'/pdf'))
-    if name == []:
-        name = '1'
-    else:
-        name = str(int(name[-1].split('.')[0: -1][0]) + 1)
+    name = str(int(name[-1].split('.')[0: -1][0]) + 1)
 
 for entry in os.scandir(dir_path+'/Images'):
     if entry.is_dir():
