@@ -77,7 +77,6 @@ class MainApplication(Frame):
             self.panel.image = img
             self.panel.grid(row=self.row, column = self.col, columnspan = 2, rowspan = 2, padx = 10, pady = 3)
             self.col = self.col + 2
-            print(f"{self.row} {self.col}")
             if self.col >= 6:
                 self.col = 0
                 self.row = self.row + 2
@@ -96,9 +95,12 @@ class MainApplication(Frame):
             To Open Image and then move it to temporary location
         """
         for element in self.openfn():
+            if not os.path.isdir(self.current_path+'/temp'):
+                os.makedirs(self.current_path+'/temp')
+                f = open(self.current_path+"/temp/info.txt", "w")
+                f.write("Put images on this folder.")
+                f.close()
             try:
-                if not os.path.isdir(dir_path+'/temp'):
-                    os.makedirs(dir_path+'/temp')
                 shutil.copy(element, self.current_path+'/temp/'+str(self.photo_count)+'.jpg')
                 self.photo_count = self.photo_count + 1
                 img = Image.open(element)
@@ -108,7 +110,6 @@ class MainApplication(Frame):
                 self.panel.image = img
                 self.panel.grid(row=self.row, column = self.col, columnspan = 2, rowspan = 2, padx = 10, pady = 3)
                 self.col = self.col + 2
-                print(f"{self.row} {self.col}")
                 if self.col >= 6:
                     self.col = 0
                     self.row = self.row + 2
@@ -139,7 +140,7 @@ class MainApplication(Frame):
                 if entry.is_dir():
                     continue
                 ext = entry.name.split('.')[-1]
-                if ext == 'py' or ext == 'md':      # Checking so that the python file or the markdown file is not effected 
+                if ext == 'py' or ext == 'md' or ext == 'txt':      # Checking so that the python file or the markdown file is not effected 
                     continue
                 if initial == 0:
                     im1 = Image.open(dir_path+'/temp/'+entry.name, mode='r').convert('RGB')

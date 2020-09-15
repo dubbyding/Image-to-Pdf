@@ -2,3 +2,4 @@ env
 .vscode
 pdf
 __pycache__
+temp
