@@ -6,16 +6,6 @@ import os
 import shutil
 import datetime
 
-class TimedValue:
-
-    def __init__(self):
-        self._started_at = datetime.datetime.utcnow()
-
-    def __call__(self):
-        time_passed = datetime.datetime.utcnow() - self._started_at
-        if time_passed.total_seconds() > 2:
-            return True
-        return False
 class MainApplication(Frame):
     '''
         Main GUI interface
@@ -107,6 +97,8 @@ class MainApplication(Frame):
         """
         for element in self.openfn():
             try:
+                if not os.path.isdir(dir_path+'/temp'):
+                    os.makedirs(dir_path+'/temp')
                 shutil.copy(element, self.current_path+'/temp/'+str(self.photo_count)+'.jpg')
                 self.photo_count = self.photo_count + 1
                 img = Image.open(element)
