@@ -8,6 +8,7 @@ Pillow -> pip install pillow
 After running the program, pdf folder is made on which pdf files are saved in number i.e. 1.pdf, 2.pdf, 3.pdf, etc.
 
 ## For the case of Linux
+Tkinter might not be installed by default so we have to install it manually.
 
 ### For Debian/Ubuntu:
 
