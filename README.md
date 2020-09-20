@@ -11,12 +11,13 @@ After running the program, pdf folder is made on which pdf files are saved in nu
 
 ### For Debian/Ubuntu:
 
-Python 2
+#### Python 2
 
 sudo apt-get install python-tk
 
 sudo apt-get install python-imaging python-pil.imagetk
-Python 3
+
+#### Python 3
 
 sudo apt-get install python3-tk
 
