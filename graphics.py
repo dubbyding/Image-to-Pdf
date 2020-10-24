@@ -13,7 +13,7 @@ class MainApplication(Frame):
     def __init__(self, parent, *args, **kwargs):
         Frame.__init__(self, parent, *args, **kwargs)
         self.parent = parent    # Root
-        
+
         # For RGB color default
         self.r, self.g, self.b = [x>>8 for x in self.parent.winfo_rgb(self.parent['bg'])]
 
@@ -75,7 +75,7 @@ class MainApplication(Frame):
                 if ext == 'py' or ext == 'md':      # Checking so that the python file or the markdown file is not effected 
                     continue
                 os.remove(self.current_path+'/temp/'+entry.name)
-                img = Image.new('RGB', (100,100), color = (self.r, self.g, self.b))
+                img = Image.new('RGB', (100,100), color = (self.r, self.g, self.b))     #Create new image to replace existing image
                 img = ImageTk.PhotoImage(img)
                 self.panel = ttk.Label(self.scrollable_frame, image=img)
                 self.panel.image = img
@@ -138,7 +138,7 @@ class MainApplication(Frame):
             name = '1'
         else:
             name = str(int(name[-1].split('.')[0: -1][0]) + 1)
-
+        
         if any(os.scandir(dir_path+'/temp')):
             # Going through Images folder
             for entry in os.scandir(dir_path+'/temp'):
@@ -161,8 +161,12 @@ class MainApplication(Frame):
                     im1.save(dir_path+'/pdf/'+name+'.pdf', mode='r',save_all = True, append_images = image_list)
             except:
                 pass
-        self.clearEverything()
-        self.var.set("Status: Converted")
+            
+            self.clearEverything()
+            self.var.set("Status: Converted")
+        else:
+            self.clearEverything()
+            self.var.set("Warning: Nothing Selected")
 
 
 if __name__ == "__main__":
