@@ -13,6 +13,10 @@ class MainApplication(Frame):
     def __init__(self, parent, *args, **kwargs):
         Frame.__init__(self, parent, *args, **kwargs)
         self.parent = parent    # Root
+        
+        # For RGB color default
+        self.r, self.g, self.b = [x>>8 for x in self.parent.winfo_rgb(self.parent['bg'])]
+
         self.image_location = ttk.Frame(self.parent)
         self.image_location.pack()
         self.button_location = Frame(self.parent)
@@ -62,27 +66,29 @@ class MainApplication(Frame):
         self.row = 0
         self.col = 0
         self.photo_count = 0
-        for entry in os.scandir(self.current_path+'/temp'):
-            # Check if directory exists
-            if entry.is_dir():
-                continue
-            ext = entry.name.split('.')[-1]
-            if ext == 'py' or ext == 'md':      # Checking so that the python file or the markdown file is not effected 
-                continue
-            os.remove(self.current_path+'/temp/'+entry.name)
-            img = Image.open(self.current_path+'/necessary/colour-info.PNG')
-            img = img.resize((100, 100), Image.ANTIALIAS)
-            img = ImageTk.PhotoImage(img)
-            self.panel = ttk.Label(self.scrollable_frame, image=img)
-            self.panel.image = img
-            self.panel.grid(row=self.row, column = self.col, columnspan = 2, rowspan = 2, padx = 10, pady = 3)
-            self.col = self.col + 2
-            if self.col >= 6:
-                self.col = 0
-                self.row = self.row + 2
-        self.row = 0
-        self.col = 0
-        self.photo_count = 0
+        try:
+            for entry in os.scandir(self.current_path+'/temp'):
+                # Check if directory exists
+                if entry.is_dir():
+                    continue
+                ext = entry.name.split('.')[-1]
+                if ext == 'py' or ext == 'md':      # Checking so that the python file or the markdown file is not effected 
+                    continue
+                os.remove(self.current_path+'/temp/'+entry.name)
+                img = Image.new('RGB', (100,100), color = (self.r, self.g, self.b))
+                img = ImageTk.PhotoImage(img)
+                self.panel = ttk.Label(self.scrollable_frame, image=img)
+                self.panel.image = img
+                self.panel.grid(row=self.row, column = self.col, columnspan = 2, rowspan = 2, padx = 10, pady = 3)
+                self.col = self.col + 2
+                if self.col >= 6:
+                    self.col = 0
+                    self.row = self.row + 2
+            self.row = 0
+            self.col = 0
+            self.photo_count = 0
+        except FileNotFoundError:
+            pass
     def openfn(self):
         """
             To open a dialog box for choosing files
@@ -163,5 +169,6 @@ if __name__ == "__main__":
     root = Tk()
     root.geometry("440x320+300+150")
     root.resizable(width=False, height=False)
+    root.title("Image To PDF")
     application = MainApplication(root).pack(side = 'top', fill="both", expand=True)
     root.mainloop()

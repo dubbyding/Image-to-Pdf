@@ -1,8 +1,12 @@
 # Image-to-Pdf
 Images to pdf for assignment submission
+*Note:* While selecting multiple file choosing one at a time is suggested.
 
 ## Requirements
-Pillow -> pip install pillow
+Pillow -> `pip install pillow`
+`pip install -r requirements.txt`
+*Note:* Update Pip
+`python -m pip install --upgrade pip`
 
 ## Information
 After running the program, pdf folder is made on which pdf files are saved in number i.e. 1.pdf, 2.pdf, 3.pdf, etc.
