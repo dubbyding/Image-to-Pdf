@@ -6,7 +6,9 @@ To execute: run.py \
 ## Requirements
 * Python
 * Pillow -> `pip install pillow` 
+Or,
 * `pip install -r requirements.txt` 
+\
 * *Note:* Update Pip 
 * `python -m pip install --upgrade pip`
 
