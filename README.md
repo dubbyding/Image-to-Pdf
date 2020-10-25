@@ -8,7 +8,6 @@ To execute: run.py \
 * Pillow -> `pip install pillow` 
 Or,
 * `pip install -r requirements.txt` 
-\
 * *Note:* Update Pip 
 * `python -m pip install --upgrade pip`
 
