@@ -1,6 +1,6 @@
 # Image-to-Pdf
-Images to pdf for assignment submission
-To execute: run.py
+Images to pdf for assignment submission \
+To execute: run.py \
 *Note:* While selecting multiple file choosing one at a time is suggested.
 
 ## Requirements
