@@ -1,7 +1,8 @@
 # Image-to-Pdf
 Images to pdf for assignment submission \
 To execute: run.py \
-*Note:* While selecting multiple file choosing one at a time is suggested.
+*Note:* While selecting multiple file choosing one at a time is suggested.\
+In order to rotate the image just click on the image you want to rotate shown inside the application window
 
 
 ## Requirements
