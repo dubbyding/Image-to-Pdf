@@ -6,6 +6,7 @@ import os
 import shutil
 import datetime
 
+
 class MainApplication(Frame):
     '''
         Main GUI interface
@@ -14,6 +15,7 @@ class MainApplication(Frame):
         Frame.__init__(self, parent, *args, **kwargs)
         self.parent = parent    # Root
 
+        self.parent.protocol("WM_DELETE_WINDOW", self.closing_application)
         # For RGB color default
         self.r, self.g, self.b = [x>>8 for x in self.parent.winfo_rgb(self.parent['bg'])]
 
@@ -28,7 +30,6 @@ class MainApplication(Frame):
         self.col = 0
         self.current_path = os.path.dirname(os.path.realpath(__file__))
         self.var = StringVar()
-
 
         #For Canvas and scrollbar
         self.canvas = Canvas(self.image_location)
@@ -61,7 +62,6 @@ class MainApplication(Frame):
         """
             To Clear everything from the screen
         """
-        
         self.var.set("Status: Waiting")
         self.row = 0
         self.col = 0
@@ -77,9 +77,9 @@ class MainApplication(Frame):
                 os.remove(self.current_path+'/temp/'+entry.name)
                 img = Image.new('RGB', (100,100), color = (self.r, self.g, self.b))     #Create new image to replace existing image
                 img = ImageTk.PhotoImage(img)
-                self.panel = ttk.Label(self.scrollable_frame, image=img)
-                self.panel.image = img
-                self.panel.grid(row=self.row, column = self.col, columnspan = 2, rowspan = 2, padx = 10, pady = 3)
+                panel = ttk.Label(self.scrollable_frame, image=img)
+                panel.image = img
+                panel.grid(row=self.row, column = self.col, columnspan = 2, rowspan = 2, padx = 10, pady = 3)
                 self.col = self.col + 2
                 if self.col >= 6:
                     self.col = 0
@@ -89,6 +89,11 @@ class MainApplication(Frame):
             self.photo_count = 0
         except FileNotFoundError:
             pass
+    
+    def closing_application(self):
+        self.clearEverything()
+        self.parent.destroy()
+
     def openfn(self):
         """
             To open a dialog box for choosing files
@@ -111,10 +116,11 @@ class MainApplication(Frame):
                 self.photo_count = self.photo_count + 1
                 img = Image.open(element)
                 img = img.resize((100, 100), Image.ANTIALIAS)
-                img = ImageTk.PhotoImage(img)
-                self.panel = ttk.Label(self.scrollable_frame, image=img)
-                self.panel.image = img
-                self.panel.grid(row=self.row, column = self.col, columnspan = 2, rowspan = 2, padx = 10, pady = 3)
+                imgFan = ImageTk.PhotoImage(img)
+                panel = ttk.Label(self.scrollable_frame, image=imgFan)
+                panel.image = imgFan
+                panel.grid(row=self.row, column = self.col, columnspan = 2, rowspan = 2, padx = 10, pady = 3)
+                panel.bind("<Button-1>", self.on_click)
                 self.col = self.col + 2
                 if self.col >= 6:
                     self.col = 0
@@ -167,6 +173,18 @@ class MainApplication(Frame):
         else:
             self.clearEverything()
             self.var.set("Warning: Nothing Selected")
+    def on_click(self,event):
+        new_row = event.widget.grid_info()["row"]
+        new_col = event.widget.grid_info()["column"]
+        counter = int((3 * (new_row/2)) + (new_col/2))
+        rotateImg = Image.open("temp/"+str(counter)+".jpg").transpose(Image.ROTATE_90)
+        rotateImg.save("temp/"+str(counter)+".jpg")
+        rotateImg = rotateImg.resize((100, 100), Image.ANTIALIAS)
+        imgFan = ImageTk.PhotoImage(rotateImg)
+        panel = ttk.Label(self.scrollable_frame, image=imgFan)
+        panel.image = imgFan
+        panel.grid(row=new_row, column = new_col, columnspan = 2, rowspan = 2, padx = 10, pady = 3)
+        panel.bind("<Button-1>", self.on_click)
 
 
 if __name__ == "__main__":
