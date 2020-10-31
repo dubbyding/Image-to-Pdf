@@ -33,6 +33,7 @@ class MainApplication(Frame):
 
         #For Canvas and scrollbar
         self.canvas = Canvas(self.image_location)
+        self.canvas.bind_all("<MouseWheel>", self._on_mousewheel)
         self.scrollbar = ttk.Scrollbar(self.image_location, orient="vertical", command=self.canvas.yview)
         self.scrollable_frame = ttk.Frame(self.canvas)
         self.scrollable_frame.bind(
@@ -57,7 +58,9 @@ class MainApplication(Frame):
         self.current_status = Label(self.status, textvariable = self.var)
         self.var.set("Status: Waiting")
         self.current_status.pack()
-        
+
+    def _on_mousewheel(self, event):
+        self.canvas.yview_scroll(-1*int(event.delta/120), "units")
     def clearEverything(self):
         """
             To Clear everything from the screen
