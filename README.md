@@ -12,7 +12,7 @@ Or,
 * *Note:* Update Pip 
 * `python -m pip install --upgrade pip`
 <a/>
-*Note:* Just executing run.py after installing python will run the program. Initial run may take sometime to resolve dependency\
+*Note:* Just executing run.py after installing python will run the program. Initial run may take sometime to resolve dependency
 
 *Note:* Virtual Environment must be installed.\
 Windows:\
