@@ -14,7 +14,7 @@ class MainApplication(Frame):
     def __init__(self, parent, *args, **kwargs):
         Frame.__init__(self, parent, *args, **kwargs)
         self.parent = parent    # Root
-
+        self.parent.iconphoto(False, PhotoImage(file="icon.png"))
         self.parent.protocol("WM_DELETE_WINDOW", self.closing_application)
         # For RGB color default
         self.r, self.g, self.b = [x>>8 for x in self.parent.winfo_rgb(self.parent['bg'])]
