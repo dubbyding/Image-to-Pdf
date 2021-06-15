@@ -23,13 +23,20 @@ class MainApplication(Frame):
         self.image_location.pack()
         self.button_location = Frame(self.parent)
         self.button_location.pack()
+        self.file_location = Frame(self.parent)
+        self.file_location.pack()
+        self.file_name = Frame(self.parent)
+        self.file_name.pack()
         self.status = Frame(self.parent)
         self.status.pack()
         self.photo_count = 0
         self.row = 0
         self.col = 0
         self.current_path = os.path.dirname(os.path.realpath(__file__))
+        self.current_file_path = StringVar()
+        self.current_saving_location = os.path.join(self.current_path,"pdf")
         self.var = StringVar()
+        self.name = '1'
 
         #For Canvas and scrollbar
         self.canvas = Canvas(self.image_location)
@@ -55,9 +62,27 @@ class MainApplication(Frame):
         self.button2.grid(row = 0, column = 1)
         self.button3 = Button(self.button_location, text = 'Clear', width = 19, command = self.clearEverything)
         self.button3.grid(row = 0, column = 2)
+        self.input1label = Label(self.file_location, textvariable=self.current_file_path, width=49, anchor='w')
+        self.current_file_path.set(os.path.join(self.current_path,"pdf"))
+        self.input1label.grid(row=0, column=1)
+        self.input1 = Button(self.file_location, text = "Choose Path", command=self.select_directory)
+        self.input1.grid(row=0, column=2)
+        self.text_box_info = Label(self.file_name, text="File Name (no need to add extension) :-")
+        self.text_box_info.grid(row=0, column=0)
+        self.text_box = Entry(self.file_name, justify="left", textvariable=self.name, width=35)
+        self.text_box.insert(END, self.name)
+        self.text_box.grid(row=0, column=3)
         self.current_status = Label(self.status, textvariable = self.var)
         self.var.set("Status: Waiting")
         self.current_status.pack()
+
+        
+        
+
+    def select_directory(self):
+        self.current_saving_location = filedialog.askdirectory()
+        self.current_file_path.set(self.current_saving_location)
+        # print(self.current_file_path)
 
     def _on_mousewheel(self, event):
         self.canvas.yview_scroll(-1*int(event.delta/120), "units")
@@ -103,6 +128,7 @@ class MainApplication(Frame):
         """
         image = (('jpg Image','jpg'), ('jpeg Image', 'jpeg'), ('png Image', 'png'), ('bmp Image', 'bmp'), ('webp Image', 'webp'))
         filename = filedialog.askopenfilenames(title='open', filetypes = image)
+        # print(filename)
         return filename
     def open_img(self):
         """
@@ -142,33 +168,44 @@ class MainApplication(Frame):
         # Checking if pdf folder exists and checks to name the file
         if not os.path.isdir(dir_path+'/pdf'):
             os.makedirs(dir_path+'/pdf')
-        name = list(os.listdir(dir_path+'/pdf'))
-        if name == []:
-            name = '1'
-        else:
-            name = str(int(name[-1].split('.')[0: -1][0]) + 1)
         
         if any(os.scandir(dir_path+'/temp')):
+            images_list = []
+            ext_list = []
             # Going through Images folder
             for entry in os.scandir(dir_path+'/temp'):
-                # Check if directory exists
                 if entry.is_dir():
                     continue
-                ext = entry.name.split('.')[-1]
+                images_list.append(int(entry.name.split('.')[0]))
+                ext_list.append(entry.name.split('.')[-1])
+            images_list.sort()
+            for index, entry in enumerate(images_list):
+                ext = ext_list[index]
+                file_name = str(entry) + "." + ext
+                # Check if directory exists
                 if ext == 'py' or ext == 'md' or ext == 'txt':      # Checking so that the python file or the markdown file is not effected 
                     continue
                 if initial == 0:
-                    im1 = Image.open(dir_path+'/temp/'+entry.name, mode='r').convert('RGB')
+                    # print("initial")
+                    im1 = Image.open(dir_path+'/temp/' + file_name, mode='r').convert('RGB')
                     initial = initial + 1
                 else:
-                    image_list.append(Image.open(dir_path+'/temp/'+entry.name, mode='r').convert('RGB'))
-
+                    image_list.append(Image.open(dir_path+'/temp/' + file_name, mode='r').convert('RGB'))
+            # print(image_list)
+            self.name = self.text_box.get()
             try:
+                file_name_location = os.path.join(self.current_saving_location,self.name+'.pdf')
+                count = 1
+                while os.path.exists(file_name_location):
+                    self.name = self.name+"({})".format(count)
+                    count += 1
+                    file_name_location = os.path.join(self.current_saving_location,self.name+'.pdf')
                 if image_list == []:
-                    im1.save(dir_path+'/pdf/'+name+'.pdf', mode='r')
+                    im1.save(file_name_location, mode='r')
                 else:
-                    im1.save(dir_path+'/pdf/'+name+'.pdf', mode='r',save_all = True, append_images = image_list)
-            except:
+                    im1.save(file_name_location, mode='r',save_all = True, append_images = image_list)
+            except Exception as e:
+                print(e)
                 pass
             
             self.clearEverything()
@@ -192,7 +229,7 @@ class MainApplication(Frame):
 
 if __name__ == "__main__":
     root = Tk()
-    root.geometry("440x320+300+150")
+    root.geometry("440x360")
     root.resizable(width=False, height=False)
     root.title("Image To PDF")
     application = MainApplication(root).pack(side = 'top', fill="both", expand=True)
