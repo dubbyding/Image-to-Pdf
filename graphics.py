@@ -192,7 +192,7 @@ class MainApplication(Frame):
                 else:
                     image_list.append(Image.open(dir_path+'/temp/' + file_name, mode='r').convert('RGB'))
             # print(image_list)
-            self.name = self.text_box.get()
+            self.name = self.text_box.get().replace(" ","_")
             try:
                 file_name_location = os.path.join(self.current_saving_location,self.name+'.pdf')
                 count = 1
